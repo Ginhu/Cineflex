@@ -1,14 +1,19 @@
 import axios from "axios"
 import { useEffect, useState } from "react"
 import styled from "styled-components"
+import { Link } from "react-router-dom"
 
-export default function HomePage() {
+export default function HomePage(props) {
 
     const [movieList, setMovieList] = useState([])
 
     useEffect(()=>{
-        axios.get("https://mock-api.driven.com.br/api/v8/cineflex/movies").then(resposta=> setMovieList(resposta.data))
+        axios.get("https://mock-api.driven.com.br/api/v8/cineflex/movies").then(response=> setMovieList(response.data))
     },[])
+
+    function setIdMovieChoosen(id) {
+        props.setIdMovie(id)
+    }
 
     return (
         <PageContainer>
@@ -16,8 +21,10 @@ export default function HomePage() {
 
             <ListContainer>
                 {movieList.map((el)=>
-                <MovieContainer>
-                    <img src={el.posterURL} alt="poster"/>
+                <MovieContainer key={el.id} >
+                    <Link to="/sessoes">
+                        <img src={el.posterURL} alt="poster" onClick={() => setIdMovieChoosen(el.id)}/>
+                    </Link>
                 </MovieContainer>)}
             </ListContainer>
 
@@ -57,3 +64,4 @@ const MovieContainer = styled.div`
         height: 190px;
     }
 `
+

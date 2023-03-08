@@ -1,34 +1,35 @@
+import axios from "axios"
+import { useEffect, useState } from "react"
 import styled from "styled-components"
 
-export default function SessionsPage() {
+export default function SessionsPage(props) {
+
+    const [movieSessions, setMovieSessions] = useState([])
+
+    useEffect(()=>{
+        axios.get(`https://mock-api.driven.com.br/api/v8/cineflex/movies/${props.idMovie}/showtimes`).then(response=>
+        {
+            setMovieSessions(response.data.days)
+            console.log(response.data.days)
+            console.log(response.data.id)
+        })
+    }, [])
 
     return (
         <PageContainer>
             Selecione o horário
             <div>
-                <SessionContainer>
-                    Sexta - 03/03/2023
-                    <ButtonsContainer>
-                        <button>14:00</button>
-                        <button>15:00</button>
-                    </ButtonsContainer>
-                </SessionContainer>
-
-                <SessionContainer>
-                    Sexta - 03/03/2023
-                    <ButtonsContainer>
-                        <button>14:00</button>
-                        <button>15:00</button>
-                    </ButtonsContainer>
-                </SessionContainer>
-
-                <SessionContainer>
-                    Sexta - 03/03/2023
-                    <ButtonsContainer>
-                        <button>14:00</button>
-                        <button>15:00</button>
-                    </ButtonsContainer>
-                </SessionContainer>
+                {movieSessions.map((el)=>
+                    <SessionContainer key={el.id}>
+                    {el.weekday} - {el.date}
+                        {el.showtimes.map((showtimes)=> 
+                            <ButtonsContainer>
+                                <button>{showtimes.name}</button>
+                            </ButtonsContainer>
+                        )}
+                        
+                    </SessionContainer>
+                )}
             </div>
 
             <FooterContainer>

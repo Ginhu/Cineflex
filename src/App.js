@@ -1,19 +1,26 @@
+import { useState } from "react"
+import { useSearchParams } from "react-router-dom"
 import styled from "styled-components"
 import HomePage from "./pages/HomePage/HomePage"
 import SeatsPage from "./pages/SeatsPage/SeatsPage"
 import SessionsPage from "./pages/SessionsPage/SessionsPage"
 import SuccessPage from "./pages/SuccessPage/SuccessPage"
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 export default function App() {
-    return (
-        <>
-           <NavContainer>CINEFLEX</NavContainer>
 
-            {<HomePage />}
-            {/* <SeatsPage /> */}
-            {/* <SessionsPage /> */}
-            {/* <SuccessPage /> */}
-        </>
+    const [idMovie, setIdMovie] = useState("")
+
+    return (
+        <BrowserRouter>
+            <NavContainer>CINEFLEX</NavContainer>
+            <Routes>
+                <Route path="/" element={<HomePage setIdMovie={setIdMovie}/>}/>
+                <Route path="/assentos" element={<SeatsPage />}/>
+                <Route path="/sessoes/" element={<SessionsPage idMovie={idMovie}/>}/>
+                <Route path="/sucesso" element={<SuccessPage />}/>
+            </Routes>
+        </BrowserRouter>
     )
 }
 
