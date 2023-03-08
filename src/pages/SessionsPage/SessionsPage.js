@@ -5,13 +5,13 @@ import styled from "styled-components"
 export default function SessionsPage(props) {
 
     const [movieSessions, setMovieSessions] = useState([])
+    const [movieDetails, setmovieDetails] = useState({})
 
     useEffect(()=>{
         axios.get(`https://mock-api.driven.com.br/api/v8/cineflex/movies/${props.idMovie}/showtimes`).then(response=>
         {
             setMovieSessions(response.data.days)
-            console.log(response.data.days)
-            console.log(response.data.id)
+            setmovieDetails(response.data)
         })
     }, [])
 
@@ -23,7 +23,7 @@ export default function SessionsPage(props) {
                     <SessionContainer key={el.id}>
                     {el.weekday} - {el.date}
                         {el.showtimes.map((showtimes)=> 
-                            <ButtonsContainer>
+                            <ButtonsContainer key={showtimes.id}>
                                 <button>{showtimes.name}</button>
                             </ButtonsContainer>
                         )}
@@ -34,10 +34,10 @@ export default function SessionsPage(props) {
 
             <FooterContainer>
                 <div>
-                    <img src={"https://br.web.img2.acsta.net/pictures/22/05/16/17/59/5165498.jpg"} alt="poster" />
+                    <img src={movieDetails.posterURL} alt="poster" />
                 </div>
                 <div>
-                    <p>Tudo em todo lugar ao mesmo tempo</p>
+                    <p>{movieDetails.title}</p>
                 </div>
             </FooterContainer>
 
