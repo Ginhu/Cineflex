@@ -10,14 +10,15 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 export default function App() {
 
     const [idMovie, setIdMovie] = useState("")
+    const [idSession, setIdSession] = useState("")
 
     return (
         <BrowserRouter>
             <NavContainer>CINEFLEX</NavContainer>
             <Routes>
                 <Route path="/" element={<HomePage setIdMovie={setIdMovie}/>}/>
-                <Route path="/assentos" element={<SeatsPage />}/>
-                <Route path="/sessoes/" element={<SessionsPage idMovie={idMovie}/>}/>
+                <Route path="/assentos" element={<SeatsPage idSession={idSession} />}/>
+                <Route path="/sessoes" element={<SessionsPage idMovie={idMovie} setIdSession={setIdSession}/>}/>
                 <Route path="/sucesso" element={<SuccessPage />}/>
             </Routes>
         </BrowserRouter>

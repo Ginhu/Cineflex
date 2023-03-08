@@ -1,5 +1,6 @@
 import axios from "axios"
 import { useEffect, useState } from "react"
+import { Link } from "react-router-dom"
 import styled from "styled-components"
 
 export default function SessionsPage(props) {
@@ -15,6 +16,10 @@ export default function SessionsPage(props) {
         })
     }, [])
 
+    function idSession(id) {
+        props.setIdSession(id)
+    }
+
     return (
         <PageContainer>
             Selecione o horário
@@ -24,7 +29,9 @@ export default function SessionsPage(props) {
                     {el.weekday} - {el.date}
                         {el.showtimes.map((showtimes)=> 
                             <ButtonsContainer key={showtimes.id}>
-                                <button>{showtimes.name}</button>
+                                <Link to="/assentos">
+                                    <button onClick={()=>idSession(showtimes.id)}>{showtimes.name}</button>
+                                </Link>
                             </ButtonsContainer>
                         )}
                         
