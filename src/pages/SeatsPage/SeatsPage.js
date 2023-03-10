@@ -66,7 +66,7 @@ export default function SeatsPage(props) {
             Selecione o(s) assento(s)
 
             <SeatsContainer>
-                {seats.map((el)=><SeatItem key={el.id} selectedSeats={props.selectedSeats} availableSeats={props.availableSeats} name={el.name} onClick={()=>selectSeats(el.name, el.id)}>{el.name}</SeatItem>)}
+                {seats.map((el)=><div data-test="seat" key={el.id}><SeatItem  selectedSeats={props.selectedSeats} availableSeats={props.availableSeats} name={el.name} onClick={()=>selectSeats(el.name, el.id)}>{el.name}</SeatItem></div>)}
             </SeatsContainer>
 
             <CaptionContainer>
@@ -80,30 +80,32 @@ export default function SeatsPage(props) {
             <form onSubmit={submitForm}>
             <FormContainer>
                 Nome do Comprador:
-                <input placeholder="Digite seu nome..." 
+                <input data-test="client-name" placeholder="Digite seu nome..." 
                 onChange={(e)=>props.setBuyerName(e.target.value)}
                 value={props.buyerName}
                 />
                 
 
                 CPF do Comprador:
-                <input placeholder="Digite seu CPF..." 
+                <input data-test="client-cpf" placeholder="Digite seu CPF..." 
                 onChange={(e)=>props.setCpf(e.target.value)}
                 value={props.cpf}
                 />
                 
 
-                <button>Reservar Assento(s)</button>
+                <button data-test="book-seat-btn">Reservar Assento(s)</button>
             </FormContainer>
             </form>
 
             <FooterContainer>
+                <div data-test="footer">
                 <div>
                     <img src={detailsMovie.movie.posterURL} alt="poster" />
                 </div>
                 <div>
                     <p>{detailsMovie.movie.title}</p>
                     <p>{detailsMovie.day.weekday} - {detailsMovie.name}</p>
+                </div>
                 </div>
             </FooterContainer>
 

@@ -21,7 +21,7 @@ export default function HomePage(props) {
                 {movieList.map((el)=>
                 <MovieContainer key={el.id} >
                     <Link to={`/sessoes/${el.id}`}>
-                        <img src={el.posterURL} alt="poster"/>
+                        <img src={el.posterURL} alt="poster" data-test="movie"/>
                     </Link>
                 </MovieContainer>)}
             </ListContainer>
