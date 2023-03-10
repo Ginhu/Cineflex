@@ -11,9 +11,7 @@ export default function HomePage(props) {
         axios.get("https://mock-api.driven.com.br/api/v8/cineflex/movies").then(response=> setMovieList(response.data))
     },[])
 
-    function setIdMovieChoosen(id) {
-        props.setIdMovie(id)
-    }
+
 
     return (
         <PageContainer>
@@ -22,8 +20,8 @@ export default function HomePage(props) {
             <ListContainer>
                 {movieList.map((el)=>
                 <MovieContainer key={el.id} >
-                    <Link to="/sessoes">
-                        <img src={el.posterURL} alt="poster" onClick={() => setIdMovieChoosen(el.id)}/>
+                    <Link to={`/sessoes/${el.id}`}>
+                        <img src={el.posterURL} alt="poster"/>
                     </Link>
                 </MovieContainer>)}
             </ListContainer>

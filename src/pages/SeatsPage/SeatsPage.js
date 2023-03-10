@@ -1,18 +1,24 @@
 import axios from "axios"
 import { useEffect, useState } from "react"
+import { useNavigate, useParams } from "react-router-dom"
 import styled from "styled-components"
 
 export default function SeatsPage(props) {
 
     const [seats, SetSeats] = useState([])
-    const [availableSeats, setAvailableSeats] = useState([])
-    let arr = [];
     const [seatsOptions, setSeatsOptions] = useState(["Selecionado", "Disponível", "Indisponível"])
-    const [selectedSeats, setSelectedSeats] = useState([])
     const [detailsMovie, setDetailsMovie] = useState([])
+    const {idSessao} = useParams()
+    const navigate = useNavigate()
+    let arr = [] 
+    let arrIds = []
+    const post = {ids: [], name: "", cpf: ""}
+    
+
     useEffect(()=>{
-        axios.get(`https://mock-api.driven.com.br/api/v8/cineflex/showtimes/${props.idSession}/seats`).then((response)=>{
+        axios.get(`https://mock-api.driven.com.br/api/v8/cineflex/showtimes/${idSessao}/seats`).then((response)=>{
             /* const resp = response.data.seats */
+            
             const details = response.data
             SetSeats(details.seats)
             setDetailsMovie(details)
@@ -21,20 +27,34 @@ export default function SeatsPage(props) {
                     arr.push(element.name)
                 }
             })
-            setAvailableSeats(arr)
+            props.setAvailableSeats(arr)
         })
     },[])
 
-    function selectSeats(seatName) {
-        if(selectedSeats.includes(seatName)) {
-            arr = selectedSeats.filter(word => !word.includes(seatName))
-            setSelectedSeats(arr)
-        } else if (availableSeats.includes(seatName)) {
-            setSelectedSeats([...selectedSeats, seatName])
+    function selectSeats(seatName, seatId) {
+        
+        if(props.selectedSeats.includes(seatName)) {
+            arr = props.selectedSeats.filter(word => !word.includes(seatName))
+            arrIds = props.selectedSeatsIds.filter(word => !word.includes(seatId))
+            props.setSelectedSeats(arr)
+            props.setSelectedSeatsIds(arrIds)
+        } else if (props.availableSeats.includes(seatName)) {
+            props.setSelectedSeats([...props.selectedSeats, seatName])
+            props.setSelectedSeatsIds([...props.selectedSeatsIds, `${seatId}`])
         } else {
             alert('Esse assento não está disponível')
         }
     }
+
+    function submitForm(event) {
+        event.preventDefault()
+        props.setMovieData(detailsMovie)
+        post.ids = props.selectedSeatsIds
+        post.name = props.buyerName
+        post.cpf = props.cpf
+        axios.post("https://mock-api.driven.com.br/api/v8/cineflex/seats/book-many", post).then(navigate("/sucesso")).catch(err=>alert(err))
+    }
+
 
     if(detailsMovie.length === 0) {
         return "Loading"
@@ -45,7 +65,7 @@ export default function SeatsPage(props) {
             Selecione o(s) assento(s)
 
             <SeatsContainer>
-                {seats.map((el)=><SeatItem key={el.id} selectedSeats={selectedSeats} availableSeats={availableSeats} name={el.name} onClick={()=>selectSeats(el.name)}>{el.name}</SeatItem>)}
+                {seats.map((el)=><SeatItem key={el.id} selectedSeats={props.selectedSeats} availableSeats={props.availableSeats} name={el.name} onClick={()=>selectSeats(el.name, el.id)}>{el.name}</SeatItem>)}
             </SeatsContainer>
 
             <CaptionContainer>
@@ -55,16 +75,26 @@ export default function SeatsPage(props) {
                     {el}
                 </CaptionItem>)}
             </CaptionContainer>
-
+            
+            <form onSubmit={submitForm}>
             <FormContainer>
                 Nome do Comprador:
-                <input placeholder="Digite seu nome..." />
+                <input placeholder="Digite seu nome..." 
+                onChange={(e)=>props.setBuyerName(e.target.value)}
+                value={props.buyerName}
+                />
+                
 
                 CPF do Comprador:
-                <input placeholder="Digite seu CPF..." />
+                <input placeholder="Digite seu CPF..." 
+                onChange={(e)=>props.setCpf(e.target.value)}
+                value={props.cpf}
+                />
+                
 
                 <button>Reservar Assento(s)</button>
             </FormContainer>
+            </form>
 
             <FooterContainer>
                 <div>

@@ -1,5 +1,4 @@
 import { useState } from "react"
-import { useSearchParams } from "react-router-dom"
 import styled from "styled-components"
 import HomePage from "./pages/HomePage/HomePage"
 import SeatsPage from "./pages/SeatsPage/SeatsPage"
@@ -9,21 +8,35 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 export default function App() {
 
-    const [idMovie, setIdMovie] = useState("")
-    const [idSession, setIdSession] = useState("")
+    const [cpf, setCpf] = useState("")
+    const [buyerName, setBuyerName] = useState("")
+    const [availableSeats, setAvailableSeats] = useState([])
+    const [selectedSeatsIds, setSelectedSeatsIds] = useState([])
+    const [movieData, setMovieData] = useState([])
+    const [selectedSeats, setSelectedSeats] = useState([])
 
     return (
         <BrowserRouter>
             <NavContainer>CINEFLEX</NavContainer>
             <Routes>
-                <Route path="/" element={<HomePage setIdMovie={setIdMovie}/>}/>
-                <Route path="/assentos" element={<SeatsPage idSession={idSession} />}/>
-                <Route path="/sessoes" element={<SessionsPage idMovie={idMovie} setIdSession={setIdSession}/>}/>
-                <Route path="/sucesso" element={<SuccessPage />}/>
+                <Route path="/" element={<HomePage/>}/>
+                <Route path="/assentos/:idSessao" element={<SeatsPage 
+                cpf={cpf} setCpf={setCpf}
+                buyerName={buyerName} setBuyerName={setBuyerName} 
+                setMovieData={setMovieData} availableSeats={availableSeats} setAvailableSeats={setAvailableSeats}
+                selectedSeatsIds = {selectedSeatsIds} setSelectedSeatsIds={setSelectedSeatsIds}
+                selectedSeats={selectedSeats} setSelectedSeats={setSelectedSeats}
+                />}/>
+                <Route path="/sessoes/:idFilme" element={<SessionsPage />}/>
+                <Route path="/sucesso" element={<SuccessPage cpf={cpf} buyerName={buyerName} selectedSeats={selectedSeats}
+                movieData={movieData}
+                />} 
+                />
             </Routes>
         </BrowserRouter>
     )
 }
+
 
 const NavContainer = styled.div`
     width: 100%;
